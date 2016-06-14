@@ -1,10 +1,10 @@
 # pi-monte-carlo
 
-Least efficient way to estimate PI, using Monte Carlo simulation :)
+Estimate PI, using Monte Carlo simulation
 
 ## Usage
 
-#### Load Core in REPL**
+#### Load Core in REPL
     Starting nREPL server...
     Loading src/pi_monte_carlo/core.clj... done
     
