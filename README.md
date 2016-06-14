@@ -39,11 +39,9 @@ Least efficient way to estimate PI, using Monte Carlo simulation :)
      
 #### Run
     lein run
-![alt text](https://github.com/rereverse/pi-monte-carlo/blob/master/resources/lein-run.png "lein-run.png")
+![alt text](https://github.com/rereverse/pi-monte-carlo/blob/master/resources/picture.png "lein-run.png")
 
-## License
-
-Copyright © 2016 
+#### License ####
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
