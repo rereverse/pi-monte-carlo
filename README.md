@@ -41,7 +41,7 @@ Estimate PI, using Monte Carlo simulation
      
 #### Run
     lein run
-![alt text](https://github.com/rereverse/pi-monte-carlo/blob/master/resources/picture.png "lein-run.png")
+![alt text](https://github.com/rereverse/pi-monte-carlo/blob/master/resources/experiment.png "experiment.png")
 
 #### License ####
 

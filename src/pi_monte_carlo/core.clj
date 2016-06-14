@@ -12,12 +12,11 @@
 (defn in-circle? [[x y]]
   (<= (+ (sqr x) (sqr y)) (sqr radius)))
 
-;; 4 * Drops-in-cricle / All Drops
-(defn pi [as ac]
-  (double (/ (* 4 ac) as)))
+(defn pi [drops-total drops-in-circle]
+  (double (/ (* 4 drops-in-circle) drops-total)))
 
 (defn approx-pi [n-drop]
-  (let [drops-in-cirle (->> (repeatedly n-drop #( in-circle? (random-x-y)))
+  (let [drops-in-cirle (->> (repeatedly n-drop #(in-circle? (random-x-y)))
                             (filter identity)
                             (count))]
     (pi n-drop drops-in-cirle)))
@@ -51,7 +50,7 @@
 
 (defn draw []
   (doall (repeatedly 100 draw-point))
-  (println (str "4*" @ac "/" @as "=") (pi @as @ac)))
+  (println (str "PI ~~") (pi @as @ac)))
 
 (defn -main []
   (vreset! ac 0)
