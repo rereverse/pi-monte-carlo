@@ -4,11 +4,11 @@ Least efficient way to estimate PI, using Monte Carlo simulation :)
 
 ## Usage
 
-### Load Core in REPL**
+#### Load Core in REPL**
     Starting nREPL server...
     Loading src/pi_monte_carlo/core.clj... done
     
-### Approx PI
+#### Approx PI
     (approx-pi 10)
     => 2.8
     (approx-pi 100)
@@ -24,7 +24,7 @@ Least efficient way to estimate PI, using Monte Carlo simulation :)
     (approx-pi 10000000)
     => 3.1408032
 
-### Sequence of Approx Pi
+#### Sequence of Approx Pi
     (take 100 approx-pi-seq)
     =>
     (0.0
@@ -37,14 +37,13 @@ Least efficient way to estimate PI, using Monte Carlo simulation :)
      3.5
      3.555555555555556
      
-### Run
-
-
-
+#### Run
+    lein run
+![alt text](https://github.com/rereverse/pi-monte-carlo/blob/master/resources/lein-run.png "lein-run.png")
 
 ## License
 
-Copyright © 2016 FIXME
+Copyright © 2016 
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
