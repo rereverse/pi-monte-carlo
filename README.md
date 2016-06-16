@@ -4,7 +4,7 @@ Estimate PI, using Monte Carlo simulation
 
 ## Usage
 
-#### Load Core in REPL
+#### Load in REPL
     Starting nREPL server...
     Loading src/pi_monte_carlo/core.clj... done
     
