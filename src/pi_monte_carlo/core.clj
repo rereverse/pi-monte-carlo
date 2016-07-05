@@ -1,63 +1,72 @@
 (ns pi-monte-carlo.core
-  (:require [quil.core :as q]))
+  (:require [quil.core :as q]
+            [quil.middleware :as qm])
+  (:import [java.util Random]))
 
 (def radius 0.5)
 
-(defn sqr [x]
-  (* x x))
+(defn random-xys
+  [seed]
+  (let [r (new Random seed)
+        rxy #(- (.nextDouble r) radius)]
+    (repeatedly #(vector (rxy) (rxy)))))
 
-(defn random-x-y []
-  [(- (rand) radius) (- (rand) radius)])
+(defn in-circle?
+  [[x y]]
+  (<= (+ (q/sq x)
+         (q/sq y))
+      (q/sq radius)))
 
-(defn in-circle? [[x y]]
-  (<= (+ (sqr x) (sqr y)) (sqr radius)))
+(defn approx-pi
+  [drops-square
+   drops-circle]
+  (-> 4.0
+      (* drops-circle)
+      (/ drops-square)))
 
-(defn pi [drops-total drops-in-circle]
-  (double (/ (* 4 drops-in-circle) drops-total)))
+(defn mc-approx-pi [n-experims seed]
+  (let [drops-circle (->> (random-xys seed)
+                          (take n-experims)
+                          (map in-circle?)
+                          (filter identity)
+                          (count))]
+    (approx-pi n-experims
+               drops-circle)))
 
-(defn approx-pi [n-drop]
-  (let [drops-in-cirle (->> (repeatedly n-drop #(in-circle? (random-x-y)))
-                            (filter identity)
-                            (count))]
-    (pi n-drop drops-in-cirle)))
-
-(def approx-pi-seq
-  (->> (repeatedly #(in-circle? (random-x-y)))
-       (reductions
-         (fn [sum in-circ?]
-           (if in-circ?
-             (inc sum) sum))
-         0)
-       (map vector (drop 1 (range)))                                  ;; zip with 1, 2, 3, 4, ...
-       (map #(apply pi %))))
+(defn approx-pi-seq [seed]
+  (->> (random-xys seed)
+       (map in-circle?)
+       (reductions #(if %2 (inc %1) %1)
+                   0)
+       (map vector
+            (rest (range)))
+       (map #(apply approx-pi %))))
 
 (defn setup []
-  (q/frame-rate 15)
-  (q/background 0))
+  (q/background 0)
+  (q/frame-rate 30)
+  (let [seed (System/currentTimeMillis)
+        xys (random-xys seed)
+        in-circs (map in-circle? xys)
+        ps (approx-pi-seq seed)]
+    [xys in-circs ps]))
 
-;; hacky state - dont need this really
-(def ac (volatile! 0))
-(def as (volatile! 0))
+(defn update-state [s]
+  (map rest s))
 
-(defn draw-point []
-  (vswap! as inc)
-  (let [[x y] (random-x-y)]
-    (if (in-circle? [x y])
-      (do (q/stroke 255)
-          (vswap! ac inc))
-      (q/stroke 255 0 0))
-    (q/point (* 600 (+ radius x)) (* 600 (+ radius y)))))
-
-(defn draw []
-  (doall (repeatedly 100 draw-point))
-  (println (str "PI ~~") (pi @as @ac)))
+(defn draw [[[[x y]] [in-circ] [p]]]
+  (q/with-stroke
+    (if in-circ [255 0 0] [255])
+    (q/point (* 600 (+ x radius))
+             (* 600 (+ y radius))))
+  (println "PI ~~" p))
 
 (defn -main []
-  (vreset! ac 0)
-  (vreset! as 0)
   (q/defsketch MonteCarloPI
                :title "Estimate PI Monte Carlo Simluation"
                :settings #(q/smooth 2)
                :setup setup
                :draw draw
-               :size [600 600]))
+               :update update-state
+               :size [600 600]
+               :middleware [qm/fun-mode]))
